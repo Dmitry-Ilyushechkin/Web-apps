@@ -130,11 +130,22 @@ define([
                 });
                 this.sheetListMenu.on('item:click', function(obj,item) {
                     me.fireEvent('show:tab', [item.value]);
+                    var targetTab = me.tabbar.$bar.find('[data-index="' + item.value + '"]').closest('li');
+                    if (targetTab.length) {
+                        var leftPosition = targetTab.position().left;
+                        me.tabbar.$bar.scrollLeft(leftPosition);
+                    } 
+                    me.sheetListMenu.items.forEach(function(menuItem) {
+                        menuItem.checked = (menuItem.value === item.value);
+                    });
                 });
                 this.cntSheetList.cmpEl.on({
                     'show.bs.dropdown': function () {
                         _.defer(function(){
                             me.cntSheetList.cmpEl.find('ul').focus();
+                            me.sheetListMenu.items.forEach(function(menuItem) {
+                                menuItem.checked = (menuItem.active); 
+                            });
                         }, 100);
                     },
                     'hide.bs.dropdown': function () {
